@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +30,25 @@ import io.socket.emitter.Emitter;
  */
 
 public class WeatherFragment extends Fragment {
+    public static String TAG = "Manh";
     private final Handler mHandler = new Handler();
     double mLastRandom = 2;
     Random mRand = new Random();
-    private Runnable mTimer1;
-    private Runnable mTimer2;
-    private LineGraphSeries<DataPoint> mSeries1;
-    private double graph2LastXValue = 5d;
+    private Runnable mTimer;
+    private LineGraphSeries<DataPoint> mSeries;
+    private double graphLastXValue = 5d;
     private Socket mSocket;
+    private Boolean isConnected = true;
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        }
+    };
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -44,13 +56,13 @@ public class WeatherFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String username;
-                    String message;
+                    Log.d(TAG, data.toString());
                     try {
-                        username = data.getString("username");
-                        message = data.getString("message");
+                        double humidity = data.getDouble("humidity");
+                        graphLastXValue += 0.25d;
+                        mSeries.appendData(new DataPoint(graphLastXValue, humidity), true, 22);
                     } catch (JSONException e) {
-                        return;
+                        e.printStackTrace();
                     }
                 }
             });
@@ -59,15 +71,17 @@ public class WeatherFragment extends Fragment {
 
     {
         try {
-            mSocket = IO.socket("http://chat.socket.io");
+            mSocket = IO.socket("http://192.168.1.10:3000");
         } catch (URISyntaxException ignored) {
+            Log.d(TAG, "instance initializer: " + ignored);
         }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSocket.on(Socket.EVENT_CONNECT, onNewMessage)
+        mSocket.on(Socket.EVENT_CONNECT, onConnect)
+                .on("chat message", onNewMessage)
                 .on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
                     @Override
@@ -78,14 +92,25 @@ public class WeatherFragment extends Fragment {
         mSocket.connect();
     }
 
+    private double getRandom() {
+        return mLastRandom += mRand.nextDouble() * 0.5 - 0.25;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_weather, null);
         GraphView graph = linearLayout.findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(generateData());
-        graph.addSeries(series);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(4);
+
+        graph.getGridLabelRenderer().setLabelVerticalWidth(100);
+        mSeries = new LineGraphSeries<>();
+        mSeries.setDrawDataPoints(true);
+        mSeries.setDrawBackground(true);
+        graph.addSeries(mSeries);
 
         return linearLayout;
     }
@@ -93,41 +118,20 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mTimer1 = new Runnable() {
-            @Override
-            public void run() {
-                mSeries1.resetData(generateData());
-                mHandler.postDelayed(this, 300);
-            }
-        };
-        mHandler.postDelayed(mTimer1, 300);
-
-//        mTimer2 = new Runnable() {
+//        mTimer = new Runnable() {
 //            @Override
 //            public void run() {
-//                graph2LastXValue += 1d;
-//                mSeries2.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
-//                mHandler.postDelayed(this, 200);
+//                mSeries.appendData(new DataPoint(graphLastXValue, getRandom()), true, 22);
+//                mHandler.postDelayed(this, 2000);
 //            }
 //        };
-//        mHandler.postDelayed(mTimer2, 1000);
+//        mHandler.postDelayed(mTimer, 0);
     }
 
-    private DataPoint[] generateData() {
-        int count = 30;
-        DataPoint[] values = new DataPoint[count];
-        for (int i = 0; i < count; i++) {
-            double x = i;
-            double f = mRand.nextDouble() * 0.15 + 0.3;
-            double y = Math.sin(i * f + 2) + mRand.nextDouble() * 0.3;
-            DataPoint v = new DataPoint(x, y);
-            values[i] = v;
-        }
-        return values;
-    }
-
-    private double getRandom() {
-        return mLastRandom += mRand.nextDouble() * 0.5 - 0.25;
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(mTimer);
     }
 
     @Override
@@ -135,7 +139,6 @@ public class WeatherFragment extends Fragment {
         super.onDestroy();
 
         mSocket.disconnect();
-        mSocket.off("new message", onNewMessage);
+        //mSocket.off("chat message", onNewMessage);
     }
-
 }
