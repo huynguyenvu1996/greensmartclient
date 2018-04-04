@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.group07.greensmart.activity.AddAgriculturalProductActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eaecee">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="6dp"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_agp_add_info"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@android:color/darker_gray"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_add_agp_image"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ca_phe_hat" />
+
+                        <Button
+                            android:id="@+id/btn_add_agp_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/img_add_agp_image"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/btn_agp_add_image"
+                            android:textSize="12sp"
+                            android:layout_marginTop="4dp"
+                            android:theme="@style/PrimaryFlatButton" />
+
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/shape_edit_text"
+                        android:hint="Nhập tên nông sản..."
+                        android:padding="6dp"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="2dp"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_agp_add_attributes"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorAccent"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/txt_agp_add_detect_temperature"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Thấp nhất: 23"
+                        android:textSize="12sp" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Cao nhất: 23"
+                        android:textSize="12sp" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/txt_agp_add_detect_humidity"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Thấp nhất: 23"
+                        android:textSize="12sp" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Thấp nhất: 23"
+                        android:textSize="12sp" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="12dp" />
+
+
+                    <Switch
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/switch_agp_add_detect_rain"
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="normal" />
+
+                    <Switch
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/switch_agp_add_detect_drying"
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/btn_open_in_app"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/shape_button"
+                android:text="@string/btn_agp_add"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>
