@@ -8,7 +8,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class BaseSocket {
-    public static final String EVENT_ON_RAIN = "on_rain";
+    public static final String EVENT_RAIN_SENSOR = "event_rain_sensor";
+    public static final String EVENT_WEATHER_SENSOR = "event_weather_sensor";
     private static final String TAG = "BaseSocket";
     public static Socket mSocket;
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -41,7 +42,8 @@ public class BService extends Service {
     private Emitter.Listener onRain = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            that.createNotification("Button Pressed", "" + " Pressed");
+            Log.d(TAG, "call: " + args[0].toString());
+            that.createNotification(args[0].toString(), "Troi dang mua!!!");
         }
     };
 
@@ -52,7 +54,7 @@ public class BService extends Service {
         BaseSocket.setConnect();
         BaseSocket.mSocket
                 .on(Socket.EVENT_CONNECT, onConnect)
-                .on(BaseSocket.EVENT_ON_RAIN, onRain)
+                .on(BaseSocket.EVENT_RAIN_SENSOR, onRain)
                 .on(Socket.EVENT_DISCONNECT, onDisconnect);
         BaseSocket.mSocket.connect();
     }
@@ -71,14 +73,11 @@ public class BService extends Service {
                 new NotificationCompat.Builder(this, "")
                         .setSmallIcon(R.drawable.ic_add_white)
                         .setContentTitle(title)
-                        .setContentText(text);
+                        .setContentText(text)
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(MainActivity.class);
@@ -102,7 +101,7 @@ public class BService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "disconnected");
-        BaseSocket.mSocket.off(BaseSocket.EVENT_ON_RAIN, onRain);
+        BaseSocket.mSocket.off(BaseSocket.EVENT_RAIN_SENSOR, onRain);
         BaseSocket.mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
         BaseSocket.mSocket.off(Socket.EVENT_CONNECT, onConnect);
     }

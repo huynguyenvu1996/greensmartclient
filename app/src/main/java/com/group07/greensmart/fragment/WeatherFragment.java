@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.Socket.BaseSocket;
 import com.group07.greensmart.model.Weather;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -20,11 +21,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.Random;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 /**
@@ -36,24 +34,12 @@ public class WeatherFragment extends Fragment {
     private final Handler mHandler = new Handler();
     double mLastRandom = 2;
     Random mRand = new Random();
-    private Runnable mTimer;
     Weather weather;
     private LineGraphSeries<DataPoint> mSeriesTemperature;
     private double graphLastXValue = 5d;
-    private Socket mSocket;
-    private Boolean isConnected = true;
     private LineGraphSeries<DataPoint> mSeriesHumidity;
-    private Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                }
-            });
-        }
-    };
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+
+    private Emitter.Listener onWeatherSensor = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -78,21 +64,7 @@ public class WeatherFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         weather = new Weather();
-        try {
-            mSocket = IO.socket("http://192.168.1.10:3000");
-        } catch (URISyntaxException ignored) {
-            Log.d(TAG, "instance initializer: " + ignored);
-        }
-        mSocket.on(Socket.EVENT_CONNECT, onConnect)
-                .on("chat message", onNewMessage)
-                .on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
-                    @Override
-                    public void call(Object... args) {
-                    }
-
-                });
-        mSocket.connect();
+        BaseSocket.mSocket.on(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
     }
 
     private double getRandom() {
@@ -146,14 +118,11 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mHandler.removeCallbacks(mTimer);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mSocket.disconnect();
-        mSocket.off("chat message", onNewMessage);
+        BaseSocket.mSocket.off(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
     }
 }
