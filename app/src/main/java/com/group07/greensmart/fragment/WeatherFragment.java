@@ -1,16 +1,18 @@
 package com.group07.greensmart.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.model.Weather;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -35,10 +37,12 @@ public class WeatherFragment extends Fragment {
     double mLastRandom = 2;
     Random mRand = new Random();
     private Runnable mTimer;
-    private LineGraphSeries<DataPoint> mSeries;
+    Weather weather;
+    private LineGraphSeries<DataPoint> mSeriesTemperature;
     private double graphLastXValue = 5d;
     private Socket mSocket;
     private Boolean isConnected = true;
+    private LineGraphSeries<DataPoint> mSeriesHumidity;
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -58,9 +62,10 @@ public class WeatherFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     Log.d(TAG, data.toString());
                     try {
-                        double humidity = data.getDouble("humidity");
+                        weather.setWeather(data);
                         graphLastXValue += 0.25d;
-                        mSeries.appendData(new DataPoint(graphLastXValue, humidity), true, 22);
+                        mSeriesTemperature.appendData(new DataPoint(graphLastXValue, weather.getTemperature()), true, 22);
+                        mSeriesHumidity.appendData(new DataPoint(graphLastXValue, weather.getHumidity()), true, 22);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -69,17 +74,15 @@ public class WeatherFragment extends Fragment {
         }
     };
 
-    {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        weather = new Weather();
         try {
             mSocket = IO.socket("http://192.168.1.10:3000");
         } catch (URISyntaxException ignored) {
             Log.d(TAG, "instance initializer: " + ignored);
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mSocket.on(Socket.EVENT_CONNECT, onConnect)
                 .on("chat message", onNewMessage)
                 .on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -100,19 +103,31 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_weather, null);
-        GraphView graph = linearLayout.findViewById(R.id.graph);
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(4);
+        @SuppressLint("InflateParams") ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.fragment_weather, null);
+        GraphView graphTemperature = constraintLayout.findViewById(R.id.graph_temperature);
+        GraphView graphHumidity = constraintLayout.findViewById(R.id.graph_humidity);
+        graphTemperature.getViewport().setXAxisBoundsManual(true);
+        graphTemperature.getViewport().setMinX(0);
+        graphTemperature.getViewport().setMaxX(4);
+        graphTemperature.getGridLabelRenderer().setLabelVerticalWidth(100);
 
-        graph.getGridLabelRenderer().setLabelVerticalWidth(100);
-        mSeries = new LineGraphSeries<>();
-        mSeries.setDrawDataPoints(true);
-        mSeries.setDrawBackground(true);
-        graph.addSeries(mSeries);
+        graphHumidity.getViewport().setXAxisBoundsManual(true);
+        graphHumidity.getViewport().setMinX(0);
+        graphHumidity.getViewport().setMaxX(4);
+        graphHumidity.getGridLabelRenderer().setLabelVerticalWidth(100);
 
-        return linearLayout;
+        mSeriesTemperature = new LineGraphSeries<>();
+        mSeriesHumidity = new LineGraphSeries<>();
+
+        mSeriesTemperature.setDrawDataPoints(true);
+        mSeriesTemperature.setDrawBackground(true);
+        mSeriesHumidity.setDrawBackground(true);
+        mSeriesHumidity.setDrawDataPoints(true);
+
+        graphTemperature.addSeries(mSeriesTemperature);
+        graphHumidity.addSeries(mSeriesHumidity);
+
+        return constraintLayout;
     }
 
     @Override
@@ -139,6 +154,6 @@ public class WeatherFragment extends Fragment {
         super.onDestroy();
 
         mSocket.disconnect();
-        //mSocket.off("chat message", onNewMessage);
+        mSocket.off("chat message", onNewMessage);
     }
 }
