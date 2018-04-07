@@ -8,14 +8,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.AgriculturalProduct;
-import com.group07.greensmart.model.Notifications;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by nguyenvuhuy on 4/3/18.
@@ -25,10 +28,15 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
 
     private Context context;
     private ArrayList<AgriculturalProduct> listAGP;
+    private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
 
     public AgriculturalProductAdapter(Context context, ArrayList<AgriculturalProduct> listAGP) {
         this.context = context;
         this.listAGP = listAGP;
+    }
+
+    public void setRecycleViewOnItemClickListener(RecycleViewOnItemClickListener recycleViewOnItemClickListener) {
+        this.recycleViewOnItemClickListener = recycleViewOnItemClickListener;
     }
 
 
@@ -41,12 +49,31 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
 
     @Override
     public void onBindViewHolder(final AgriculturalProductAdapter.AgriculturalProductViewHolder holder, int position) {
+
+        holder.setRecycleViewOnItemClickListener(new RecycleViewOnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(context, "aaa", Toast.LENGTH_SHORT).show();
+                if (recycleViewOnItemClickListener != null) {
+                    recycleViewOnItemClickListener.onClick(view, position);
+                }
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                if (recycleViewOnItemClickListener != null) {
+                    recycleViewOnItemClickListener.onLongClick(view, position);
+                }
+            }
+        });
+
         AgriculturalProduct agriculturalProduct = listAGP.get(position);
         holder.txtName.setText(agriculturalProduct.getName());
         holder.txtTemperature.setText(context.getString(R.string.item_agp_temperature,
-                agriculturalProduct.getMinTemperature(), agriculturalProduct.getMinTemperature()));
+                String.valueOf(agriculturalProduct.getMinTemperature()), String.valueOf(agriculturalProduct.getMaxTemperature())));
         holder.txtHumidity.setText(context.getString(R.string.item_agp_humidity,
-                agriculturalProduct.getMinHumidity(), agriculturalProduct.getMaxHumidity()));
+                String.valueOf(agriculturalProduct.getMinHumidity()), String.valueOf(agriculturalProduct.getMaxHumidity())));
 
         if (agriculturalProduct.isDetectRain()) {
             holder.txtDetectRain.setText(context.getString(R.string.item_agp_detect_rain));
@@ -58,6 +85,16 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
         } else {
             holder.txtDrying.setText(context.getString(R.string.item_agp_no_drying));
         }
+
+        if (agriculturalProduct.isNotification()) {
+            holder.txtNotification.setText(context.getString(R.string.item_agp_notification));
+        } else {
+            holder.txtNotification.setVisibility(View.INVISIBLE);
+        }
+
+        Picasso.get().load("http://192.168.0.120:3000/" + agriculturalProduct.getImage())
+                .resize(90, 90)
+                .into(holder.image);
 
         holder.imgMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,22 +132,47 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
         return listAGP.size();
     }
 
-    public class AgriculturalProductViewHolder extends RecyclerView.ViewHolder {
+    public class AgriculturalProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView txtName, txtTemperature, txtHumidity, txtDetectRain, txtDrying, txtNotification;
-        public ImageView image;
+        public CircleImageView image;
         public ImageButton imgMenu;
+        private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
 
         public AgriculturalProductViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
+            view.setOnClickListener(this);
             txtName = (TextView) view.findViewById(R.id.txt_item_agp_name);
             txtTemperature = (TextView) view.findViewById(R.id.txt_item_agp_temperature);
             txtHumidity = (TextView) view.findViewById(R.id.txt_item_agp_humidity);
             txtDetectRain = (TextView) view.findViewById(R.id.txt_item_agp_detect_rain);
             txtDrying = (TextView) view.findViewById(R.id.txt_item_agp_drying);
             txtNotification = (TextView) view.findViewById(R.id.txt_item_agp_notification);
-            image = view.findViewById(R.id.img_add_agp_image);
+            image = view.findViewById(R.id.img_item_agp_image);
             imgMenu = view.findViewById(R.id.btn_item_agp_menu);
+        }
+
+        public void setRecycleViewOnItemClickListener(RecycleViewOnItemClickListener recycleViewOnItemClickListener) {
+            this.recycleViewOnItemClickListener = recycleViewOnItemClickListener;
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            if (recycleViewOnItemClickListener != null) {
+                recycleViewOnItemClickListener.onClick(view, getAdapterPosition());
+            }
+
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (recycleViewOnItemClickListener != null) {
+                recycleViewOnItemClickListener.onLongClick(view, getAdapterPosition());
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.group07.greensmart.R;
 import com.group07.greensmart.rest.ApiInterface;
+import com.group07.greensmart.utils.ApiUtils;
 
 
 import org.reactivestreams.Subscriber;
@@ -28,62 +30,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-
 /**
  * Created by nguyenvuhuy on 4/3/18.
  */
 
 public class BaseActivity extends AppCompatActivity {
 
-
-//    private CompositeDisposable mCompositeDisposable;
-//    protected CompositeSubscription compositeSubscription;
-//    protected Subscriber subscriber;
+    protected Gson gson;
+    protected ApiInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gson = new Gson();
+        apiInterface = ApiUtils.getAPIInterface();
     }
-//
-//    protected void onUnsubscribe() {
-//        if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-//            compositeSubscription.unsubscribe();
-//            Log.e("TAG", "onUnsubscribe: ");
-//        }
-//    }
-//
-////    protected void addSubscribe(Observable observable, Subscriber subscriber) {
-////        this.subscriber = subscriber;
-////        if (compositeSubscription == null) {
-////            compositeSubscription = new CompositeSubscription();
-////        }
-////        compositeSubscription.add(observable
-////                .subscribeOn(Schedulers.io())
-////                .observeOn(AndroidSchedulers.mainThread())
-////                .subscribe(subscriber));
-////    }
-//
-//
-//    protected void addSubscribe(Observable observable, Subscriber subscriber) {
-//        mCompositeDisposable.add(observable
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(subscriber.onNext(),subscriber.onError(),subscriber.onComplete())
-//    }
-//
-//    private void loadJSON() {
-//
-//        ApiInterface requestInterface = new Retrofit.Builder()
-//                .baseUrl("")
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build().create(ApiInterface.class);
-//
-//        Disposable disposable = requestInterface.register()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(this::handleResponse, this::handleError, this::handleSuccess);
-//
-//        mCompositeDisposable.add(disposable);
-//    }
+
 }

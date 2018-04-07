@@ -23,19 +23,19 @@ public class AgriculturalProduct {
 
     @SerializedName("temp_min")
     @Expose
-    private int minTemperature;
+    private double minTemperature;
 
     @SerializedName("temp_max")
     @Expose
-    private int maxTemperature;
+    private double maxTemperature;
 
     @SerializedName("humidity_min")
     @Expose
-    private int minHumidity;
+    private double minHumidity;
 
     @SerializedName("humidity_max")
     @Expose
-    private int maxHumidity;
+    private double maxHumidity;
 
     @SerializedName("detect_rain")
     @Expose
@@ -44,6 +44,10 @@ public class AgriculturalProduct {
     @SerializedName("drying")
     @Expose
     private boolean drying;
+
+    @SerializedName("notification")
+    @Expose
+    private boolean notification;
 
     @SerializedName("created_at")
     @Expose
@@ -54,7 +58,7 @@ public class AgriculturalProduct {
     private String rev;
 
 
-    public AgriculturalProduct(String id, String name, String image, int minTemperature, int maxTemperature, int minHumidity, int maxHumidity, boolean detectRain, boolean drying, String createdAt, String rev) {
+    public AgriculturalProduct(String id, String name, String image, double minTemperature, double maxTemperature, double minHumidity, double maxHumidity, boolean detectRain, boolean drying, boolean notification, String createdAt, String rev) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -64,9 +68,12 @@ public class AgriculturalProduct {
         this.maxHumidity = maxHumidity;
         this.detectRain = detectRain;
         this.drying = drying;
+        this.notification = notification;
         this.createdAt = createdAt;
         this.rev = rev;
     }
+
+
 
     public String getId() {
         return id;
@@ -92,35 +99,35 @@ public class AgriculturalProduct {
         this.image = image;
     }
 
-    public int getMinTemperature() {
+    public double getMinTemperature() {
         return minTemperature;
     }
 
-    public void setMinTemperature(int minTemperature) {
+    public void setMinTemperature(double minTemperature) {
         this.minTemperature = minTemperature;
     }
 
-    public int getMaxTemperature() {
+    public double getMaxTemperature() {
         return maxTemperature;
     }
 
-    public void setMaxTemperature(int maxTemperature) {
+    public void setMaxTemperature(double maxTemperature) {
         this.maxTemperature = maxTemperature;
     }
 
-    public int getMinHumidity() {
+    public double getMinHumidity() {
         return minHumidity;
     }
 
-    public void setMinHumidity(int minHumidity) {
+    public void setMinHumidity(double minHumidity) {
         this.minHumidity = minHumidity;
     }
 
-    public int getMaxHumidity() {
+    public double getMaxHumidity() {
         return maxHumidity;
     }
 
-    public void setMaxHumidity(int maxHumidity) {
+    public void setMaxHumidity(double maxHumidity) {
         this.maxHumidity = maxHumidity;
     }
 
@@ -138,6 +145,14 @@ public class AgriculturalProduct {
 
     public void setDrying(boolean drying) {
         this.drying = drying;
+    }
+
+    public boolean isNotification() {
+        return notification;
+    }
+
+    public void setNotification(boolean notification) {
+        this.notification = notification;
     }
 
     public String getCreatedAt() {
