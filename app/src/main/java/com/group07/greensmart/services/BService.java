@@ -17,6 +17,9 @@ import com.group07.greensmart.R;
 import com.group07.greensmart.Socket.BaseSocket;
 import com.group07.greensmart.activity.MainActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -43,7 +46,16 @@ public class BService extends Service {
         @Override
         public void call(Object... args) {
             Log.d(TAG, "call: " + args[0].toString());
-            that.createNotification(args[0].toString(), "Troi dang mua!!!");
+            JSONObject data = (JSONObject) args[0];
+            String title = "Title";
+            String subject = "Subject";
+            try {
+                title = data.getString("title");
+                subject = data.getString("subject");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            that.createNotification(title, subject);
         }
     };
 
