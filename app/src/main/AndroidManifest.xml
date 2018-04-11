@@ -3,6 +3,7 @@
     package="com.group07.greensmart">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -31,6 +32,7 @@
         <activity
             android:name=".activity.notification.ViewNotificationActivity"
             android:theme="@style/AppTheme" />
+        <service android:name=".services.BService" />
         <activity
             android:name=".activity.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
