@@ -3,11 +3,13 @@ package com.group07.greensmart.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by nguyenvuhuy on 3/28/18.
  */
 
-public class AgriculturalProduct {
+public class AgriculturalProduct implements Serializable {
 
     @SerializedName("_id")
     @Expose
@@ -72,7 +74,6 @@ public class AgriculturalProduct {
         this.createdAt = createdAt;
         this.rev = rev;
     }
-
 
 
     public String getId() {

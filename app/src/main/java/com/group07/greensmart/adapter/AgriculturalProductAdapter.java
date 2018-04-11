@@ -1,6 +1,8 @@
 package com.group07.greensmart.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.listener.OnMenuItemAGPClickListener;
 import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.AgriculturalProduct;
+import com.group07.greensmart.utils.ApplicationUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
     private Context context;
     private ArrayList<AgriculturalProduct> listAGP;
     private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
+    private OnMenuItemAGPClickListener onMenuItemAGPClickListener;
 
     public AgriculturalProductAdapter(Context context, ArrayList<AgriculturalProduct> listAGP) {
         this.context = context;
@@ -39,6 +44,9 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
         this.recycleViewOnItemClickListener = recycleViewOnItemClickListener;
     }
 
+    public void setOnMenuItemAGPClickListener(OnMenuItemAGPClickListener onMenuItemAGPClickListener) {
+        this.onMenuItemAGPClickListener = onMenuItemAGPClickListener;
+    }
 
     @Override
     public AgriculturalProductAdapter.AgriculturalProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,12 +56,12 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
 
 
     @Override
-    public void onBindViewHolder(final AgriculturalProductAdapter.AgriculturalProductViewHolder holder, int position) {
+    public void onBindViewHolder(final AgriculturalProductAdapter.AgriculturalProductViewHolder holder, final int position) {
 
         holder.setRecycleViewOnItemClickListener(new RecycleViewOnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(context, "aaa", Toast.LENGTH_SHORT).show();
+
                 if (recycleViewOnItemClickListener != null) {
                     recycleViewOnItemClickListener.onClick(view, position);
                 }
@@ -92,20 +100,20 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
             holder.txtNotification.setVisibility(View.INVISIBLE);
         }
 
-        Picasso.get().load("http://192.168.0.120:3000/" + agriculturalProduct.getImage())
+        Picasso.get().load(ApplicationUtils.getImageUrl(context, agriculturalProduct.getImage()))
                 .resize(90, 90)
                 .into(holder.image);
 
         holder.imgMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder);
+                showPopupMenu(holder, position);
             }
         });
 
     }
 
-    void showPopupMenu(AgriculturalProductAdapter.AgriculturalProductViewHolder holder) {
+    void showPopupMenu(final AgriculturalProductAdapter.AgriculturalProductViewHolder holder, final int position) {
         //creating a popup menu
         PopupMenu popup = new PopupMenu(context, holder.imgMenu);
         //inflating menu from xml resource
@@ -116,7 +124,19 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_item_agp_view_forecast:
-                        //handle menu1 click
+
+                        if (onMenuItemAGPClickListener != null) {
+                            onMenuItemAGPClickListener.onViewWeatherForecastClick(holder.imgMenu, position);
+                        }
+
+                        break;
+                    case R.id.menu_item_agp_delete:
+
+                        if (onMenuItemAGPClickListener != null) {
+                            onMenuItemAGPClickListener.onDeleteAGPClick(holder.imgMenu, position);
+                        }
+
+
                         break;
                 }
                 return false;

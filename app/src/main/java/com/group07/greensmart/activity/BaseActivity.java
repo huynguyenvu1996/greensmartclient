@@ -43,7 +43,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gson = new Gson();
-        apiInterface = ApiUtils.getAPIInterface();
+        apiInterface = ApiUtils.getAPIInterface(this);
     }
 
 }

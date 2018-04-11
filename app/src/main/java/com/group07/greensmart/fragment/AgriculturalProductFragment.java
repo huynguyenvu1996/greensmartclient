@@ -2,12 +2,13 @@ package com.group07.greensmart.fragment;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,24 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.group07.greensmart.R;
-import com.group07.greensmart.activity.AddAgriculturalProductActivity;
-import com.group07.greensmart.activity.UpdateAgriculturalProductActivity;
+import com.group07.greensmart.activity.agp.AddAgriculturalProductActivity;
+import com.group07.greensmart.activity.agp.UpdateAgriculturalProductActivity;
+import com.group07.greensmart.activity.agp.ViewAGPWeatherForecastActivity;
 import com.group07.greensmart.adapter.AgriculturalProductAdapter;
-import com.group07.greensmart.adapter.NotificationsAdapter;
+import com.group07.greensmart.listener.OnMenuItemAGPClickListener;
 import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.AgriculturalProduct;
 import com.group07.greensmart.model.ApiResponse;
-import com.group07.greensmart.model.Notifications;
-import com.group07.greensmart.rest.ApiClient;
 import com.group07.greensmart.rest.ApiInterface;
 import com.group07.greensmart.utils.ApiUtils;
+import com.group07.greensmart.utils.ApplicationUtils;
 import com.group07.greensmart.utils.ToastUtils;
-
-import org.json.JSONObject;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,9 @@ import retrofit2.Response;
 
 import static com.group07.greensmart.constant.Constant.CODE_SUCCESS;
 import static com.group07.greensmart.constant.Constant.KEY_CODE;
+import static com.group07.greensmart.constant.Constant.KEY_ID;
 import static com.group07.greensmart.constant.Constant.KEY_MESSAGE;
+import static com.group07.greensmart.constant.Constant.KEY_REV;
 import static com.group07.greensmart.constant.Constant.REQUEST_CODE_ADD_AGP;
 
 /**
@@ -53,19 +56,19 @@ import static com.group07.greensmart.constant.Constant.REQUEST_CODE_ADD_AGP;
 
 public class AgriculturalProductFragment extends BaseFragment {
 
-    private ApiInterface apiInterface = null;
+    private ApiInterface apiInterface;
     private FloatingActionButton fabAddAGP;
-    private RecyclerView rvAGP = null;
+    private RecyclerView rvAGP;
     private ProgressBar progressBar;
     private SwipeRefreshLayout srAGP;
-    private ArrayList<AgriculturalProduct> listAGP = null;
+    private ArrayList<AgriculturalProduct> listAGP;
     private boolean isSwipeRefresh = false;
-    private AgriculturalProductAdapter agriculturalProductAdapter = null;
+    private AgriculturalProductAdapter agriculturalProductAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiInterface = ApiUtils.getAPIInterface();
+        apiInterface = ApiUtils.getAPIInterface(getActivity());
     }
 
     @Override
@@ -125,12 +128,45 @@ public class AgriculturalProductFragment extends BaseFragment {
             @Override
             public void onClick(View view, int position) {
                 Intent updateAGPIntent = new Intent(getActivity(), UpdateAgriculturalProductActivity.class);
+                updateAGPIntent.putExtra(KEY_ID, listAGP.get(position).getId());
+                updateAGPIntent.putExtra(KEY_REV, listAGP.get(position).getRev());
                 startActivityForResult(updateAGPIntent, REQUEST_CODE_ADD_AGP);
             }
 
             @Override
             public void onLongClick(View view, int position) {
 
+            }
+        });
+
+        agriculturalProductAdapter.setOnMenuItemAGPClickListener(new OnMenuItemAGPClickListener() {
+            @Override
+            public void onViewWeatherForecastClick(View view, int position) {
+
+                Toast.makeText(getActivity(), "G", Toast.LENGTH_SHORT).show();
+                Intent agpWeatherForecastIntent = new Intent(getActivity(), ViewAGPWeatherForecastActivity.class);
+                agpWeatherForecastIntent.putExtra("AGP", listAGP.get(position));
+                startActivity(agpWeatherForecastIntent);
+            }
+
+            @Override
+            public void onDeleteAGPClick(View view, final int position) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.title_notification));
+                builder.setMessage(getString(R.string.message_delete_agp));
+                builder.setNegativeButton(getText(R.string.btn_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.setPositiveButton(getText(R.string.btn_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteAGP(listAGP.get(position).getId(), listAGP.get(position).getRev());
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -150,7 +186,7 @@ public class AgriculturalProductFragment extends BaseFragment {
     }
 
 
-    public void loadAGPListFromServer() {
+    private void loadAGPListFromServer() {
 
         if (!isSwipeRefresh) {
             progressBar.setVisibility(View.VISIBLE);
@@ -205,6 +241,31 @@ public class AgriculturalProductFragment extends BaseFragment {
                     isSwipeRefresh = false;
                 }
 //                showErrorMessage();
+                Log.d("MainActivity", "error loading from API" + t.getMessage());
+
+            }
+        });
+    }
+
+
+    private void deleteAGP(String id, String rev) {
+        apiInterface.deleteAGP(id, rev).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+
+                if (response.isSuccessful()) {
+                    if (!response.body().isError()) {
+                        loadAGPListFromServer();
+                    } else {
+                    }
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors depending on status code
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                 Log.d("MainActivity", "error loading from API" + t.getMessage());
 
             }

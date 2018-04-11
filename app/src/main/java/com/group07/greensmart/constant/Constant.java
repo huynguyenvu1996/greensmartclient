@@ -11,6 +11,9 @@ public class Constant {
     public static final int CODE_SUCCESS = 200;
     public static final int CODE_FAILED = 400;
 
+    public static final String KEY_ID = "KEY_ID";
+    public static final String KEY_REV = "KEY_REV";
+
 
     //Permission request code activity
     public static final int REQUEST_CODE_ADD_AGP = 10001;

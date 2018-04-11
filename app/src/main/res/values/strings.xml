@@ -24,8 +24,10 @@
     <string name="btn_agp_add">Thêm mới</string>
     <string name="app_slogan">Màu xanh của công nghệ</string>
 
-    <string name="item_agp_temperature">Nhiệt độ: %2$s-%2$s °C</string>
-    <string name="item_agp_humidity">Độ ẩm: %2$s-%2$s </string>
+    <string name="item_agp_temperature">Nhiệt độ: %1$s-%2$s °C</string>
+    <string name="item_agp_humidity">Độ ẩm: %1$s-%2$s</string>
+    <string name="item_agp_temperature_forecast">Nhiệt độ: %1$s °C</string>
+    <string name="item_agp_humidity_forecast">Độ ẩm: %1$s</string>
     <string name="item_agp_detect_rain">Phát hiện mưa</string>
     <string name="item_agp_no_detect_rain">Không phát hiện mưa</string>
     <string name="item_agp_drying">Đang phơi</string>
@@ -44,5 +46,24 @@
     <string name="btn_agp_update">Cập nhật</string>
     <string name="title_agp_update">Cập nhật nông sản</string>
 
+    <string name="settings_title_general">Chung</string>
+    <string name="settings_title_about">Thông tin</string>
+    <string name="settings_title_version">Phiên bản ứng dụng</string>
+    <string name="settings_summary_version">1.0.1</string>
+    <string name="settings_title_open_source">Giấy phép mã nguồn mở</string>
+    <string name="settings_summary_open_source">Danh sách mã nguồn mở sử dụng trong ứng dụng</string>
+    <string name="settings_title_notification">Thông báo</string>
+    <string name="settings_summary_notification">Bật thông báo</string>
+    <string name="settings_title_developers">Nhà phát triển</string>
+    <string name="settings_summary_developers">© 2018 G0714CLC. All rights reserved.</string>
+    <string name="title_activity_settings">Cài đặt</string>
+    <string name="menu_item_agp_delete">Xóa bỏ</string>
+    <string name="title_notification">Thông báo</string>
+    <string name="message_delete_agp">Bạn chắc chắn muốn xóa nông sản này?</string>
+    <string name="btn_no">Không</string>
+    <string name="btn_cancel">Hủy bỏ</string>
+    <string name="btn_yes">Có</string>
+    <string name="settings_title_server">Thông tin máy chủ</string>
+    <string name="settings_summary_server">Cấu hình địa chỉ máy chủ</string>
 
 </resources>

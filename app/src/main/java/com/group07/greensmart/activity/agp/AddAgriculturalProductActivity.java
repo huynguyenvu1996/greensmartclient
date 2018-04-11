@@ -1,24 +1,16 @@
-package com.group07.greensmart.activity;
+package com.group07.greensmart.activity.agp;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -27,34 +19,24 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
-import com.google.gson.JsonArray;
 import com.group07.greensmart.R;
-import com.group07.greensmart.model.AgriculturalProduct;
+import com.group07.greensmart.activity.BaseActivity;
 import com.group07.greensmart.model.ApiResponse;
 import com.group07.greensmart.utils.ActivityUtils;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Part;
 
-import static com.group07.greensmart.constant.Constant.CODE_FAILED;
 import static com.group07.greensmart.constant.Constant.CODE_SUCCESS;
-import static com.group07.greensmart.constant.Constant.KEY_CODE;
-import static com.group07.greensmart.constant.Constant.KEY_MESSAGE;
 
 public class AddAgriculturalProductActivity extends BaseActivity implements View.OnClickListener {
 
@@ -158,7 +140,7 @@ public class AddAgriculturalProductActivity extends BaseActivity implements View
         if (imageFile != null) {
         /*https://stackoverflow.com/questions/36653277/error-uploading-a-file-using-retrofit-2*/
             RequestBody fileBody = RequestBody.create(MediaType.parse(getMimeType(imageFile.getPath())), new File(imageFile.getPath()));
-            map.put("image\"; filename=\"" + imageFile.getName() + "\"", fileBody);
+            map.put("image_file\"; filename=\"" + imageFile.getName() + "\"", fileBody);
         }
 
         apiInterface.createAGP(map).enqueue(new Callback<ApiResponse>() {

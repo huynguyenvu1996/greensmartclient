@@ -72,21 +72,11 @@ public interface ApiInterface {
 //    );
 
 
-    /*https://stackoverflow.com/questions/39953457/how-to-upload-image-file-in-retrofit-2*/
     @Multipart
     @POST("agricultural-product/update")
     Call<ApiResponse> updateAGP(
-            @Part("name") RequestBody name,
-            @Part("image") RequestBody image,
-            @Part("temp_min") RequestBody minTemperature,
-            @Part("temp_max") RequestBody maxTemperature,
-            @Part("humidity_min") RequestBody minHumidity,
-            @Part("humidity_max") RequestBody maxHumidity,
-            @Part("detect_rain") RequestBody detectRain,
-            @Part("drying") RequestBody drying,
-            @Part("notification") RequestBody notification
+            @PartMap Map<String, RequestBody> params
 
     );
-
 
 }

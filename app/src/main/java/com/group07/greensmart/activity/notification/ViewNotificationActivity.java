@@ -1,4 +1,4 @@
-package com.group07.greensmart.activity;
+package com.group07.greensmart.activity.notification;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

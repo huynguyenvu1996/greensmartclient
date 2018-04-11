@@ -1,5 +1,6 @@
 package com.group07.greensmart.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.activity.settings.SettingsActivity;
 import com.group07.greensmart.dialog.DialogAboutApps;
 import com.group07.greensmart.fragment.AgriculturalProductFragment;
 import com.group07.greensmart.fragment.NotificationsFragment;
@@ -113,6 +115,8 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(getString(R.string.title_nav_notifications));
                 break;
             case R.id.nav_menu_settings:
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
                 break;
             case R.id.nav_menu_about:
                 DialogAboutApps dialogAboutApps = new DialogAboutApps(this);

@@ -1,5 +1,6 @@
 package com.group07.greensmart.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.group07.greensmart.model.ApiResponse;
@@ -16,8 +17,8 @@ import retrofit2.Response;
 
 public class ApiUtils {
 
-    public static ApiInterface getAPIInterface() {
-        return ApiClient.getClient().create(ApiInterface.class);
+    public static ApiInterface getAPIInterface(Context context) {
+        return ApiClient.getClient(context).create(ApiInterface.class);
     }
 
 }
