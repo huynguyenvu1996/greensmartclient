@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by nguyenvuhuy on 3/28/18.
  */
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends BaseFragment {
 
     private RecyclerView rvNotifications = null;
     private ArrayList<Notifications> listNotifications = null;

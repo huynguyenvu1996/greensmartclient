@@ -29,7 +29,8 @@ import io.socket.emitter.Emitter;
  * Created by nguyenvuhuy on 3/28/18.
  */
 
-public class WeatherFragment extends Fragment {
+
+public class WeatherFragment extends BaseFragment {
     public static String TAG = "Manh";
     private final Handler mHandler = new Handler();
     double mLastRandom = 2;
@@ -59,7 +60,7 @@ public class WeatherFragment extends Fragment {
             });
         }
     };
-
+    
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
