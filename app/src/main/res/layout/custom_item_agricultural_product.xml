@@ -3,17 +3,18 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="1dp"
     android:clickable="true"
     android:focusable="true"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     android:foreground="?selectableItemBackground">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="false"
         card_view:cardBackgroundColor="#ffffff"
         card_view:cardElevation="28dp">
 
@@ -90,14 +91,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nhiệt độ: 32-44 °C"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/txt_item_agp_humidity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Độ ẩm: 60-80 %"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -115,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="18dp"
                             android:text="Phát hiện mưa"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/txt_item_agp_drying"
@@ -123,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="18dp"
                             android:text="Đang phơi"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 

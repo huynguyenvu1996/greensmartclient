@@ -17,8 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.group07.greensmart.R;
-import com.group07.greensmart.Socket.BaseSocket;
 import com.group07.greensmart.activity.MainActivity;
+import com.group07.greensmart.socket.BaseSocket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ public class BService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        BaseSocket.setConnect();
+        BaseSocket.setConnect(BService.this);
         BaseSocket.mSocket
                 .on(Socket.EVENT_CONNECT, onConnect)
                 .on(BaseSocket.EVENT_PUSH_NOTIFICATION, onPushNotification)

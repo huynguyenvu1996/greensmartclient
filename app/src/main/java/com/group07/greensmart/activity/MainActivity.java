@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.group07.greensmart.R;
+import com.group07.greensmart.activity.settings.SettingsActivity;
+import com.group07.greensmart.dialog.DialogAboutApps;
 import com.group07.greensmart.fragment.AgriculturalProductFragment;
 import com.group07.greensmart.fragment.NotificationsFragment;
 import com.group07.greensmart.fragment.WeatherFragment;
@@ -22,21 +24,14 @@ import com.group07.greensmart.services.BService;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Toolbar toolbar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,16 +95,23 @@ public class MainActivity extends AppCompatActivity
         switch (itemId) {
             case R.id.nav_menu_weather:
                 fragment = new WeatherFragment();
+                toolbar.setTitle(getString(R.string.title_nav_weather));
                 break;
             case R.id.nav_menu_list_agricultural:
                 fragment = new AgriculturalProductFragment();
+                toolbar.setTitle(getString(R.string.title_nav_agp));
                 break;
             case R.id.nav_menu_notifications:
                 fragment = new NotificationsFragment();
+                toolbar.setTitle(getString(R.string.title_nav_notifications));
                 break;
             case R.id.nav_menu_settings:
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
                 break;
             case R.id.nav_menu_about:
+                DialogAboutApps dialogAboutApps = new DialogAboutApps(this);
+                dialogAboutApps.showDialog();
                 break;
         }
 

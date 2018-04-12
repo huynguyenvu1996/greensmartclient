@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.group07.greensmart.activity.AddAgriculturalProductActivity">
+    tools:context="com.group07.greensmart.activity.agp.AddAgriculturalProductActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#eaecee">
+        android:background="#eaecee"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 card_view:cardBackgroundColor="#FFFFFF"
                 card_view:cardUseCompatPadding="true">
 
@@ -31,21 +32,6 @@
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_agp_add_info"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"/>
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -65,22 +51,25 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/img_add_agp_image"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
                             android:text="@string/btn_agp_add_image"
                             android:textSize="12sp"
-                            android:layout_marginTop="4dp"
                             android:theme="@style/PrimaryFlatButton" />
 
 
                     </RelativeLayout>
 
                     <EditText
+                        android:id="@+id/edt_add_agp_name"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/shape_edit_text"
-                        android:hint="Nhập tên nông sản..."
+                        android:hint="Tên nông sản..."
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:padding="6dp"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
 
                 </LinearLayout>
@@ -91,108 +80,276 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 card_view:cardBackgroundColor="#FFFFFF"
                 card_view:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/title_agp_add_attributes"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/txt_agp_add_detect_temperature"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Min"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                        <SeekBar
+                            android:id="@+id/sb_add_agp_temp_min"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="6" />
+
+                        <TextView
+                            android:id="@+id/txt_add_agp_temp_min"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorAccent"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_height="1dp"
+                        android:background="@color/greyLine" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Max"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                        <SeekBar
+                            android:id="@+id/sb_btn_add_agp_temp_max"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="6" />
+
+                        <TextView
+                            android:id="@+id/txt_add_agp_temp_max"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/txt_agp_add_detect_temperature"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Thấp nhất: 23"
-                        android:textSize="12sp" />
-
-                    <SeekBar
-                        android:layout_width="match_parent"
-                        android:layout_height="28dp"
-                        android:layout_marginStart="12dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Cao nhất: 23"
-                        android:textSize="12sp" />
-
-                    <SeekBar
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="12dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
                         android:layout_marginBottom="4dp"
                         android:layout_marginTop="6dp"
                         android:text="@string/txt_agp_add_detect_humidity"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="14sp" />
 
-                    <TextView
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Thấp nhất: 23"
-                        android:textSize="12sp" />
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <SeekBar
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Min"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                        <SeekBar
+                            android:id="@+id/sb_add_agp_humidity_min"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="6" />
+
+                        <TextView
+                            android:id="@+id/txt_add_agp_humidity_min"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="12dp" />
+                        android:layout_height="1dp"
+                        android:background="@color/greyLine" />
 
-                    <TextView
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Thấp nhất: 23"
-                        android:textSize="12sp" />
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <SeekBar
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Max"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                        <SeekBar
+                            android:id="@+id/sb_add_agp_humidity_max"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="6" />
+
+                        <TextView
+                            android:id="@+id/txt_add_agp_humidity_max"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
 
                     <Switch
+                        android:id="@+id/sw_add_agp_detect_rain"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_margin="10dp"
+                        android:checked="true"
                         android:text="@string/switch_agp_add_detect_rain"
                         android:textColor="@android:color/darker_gray"
                         android:textStyle="normal" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/greyLine" />
+
                     <Switch
+                        android:id="@+id/sw_add_agp_drying"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
+                        android:layout_margin="10dp"
                         android:layout_marginTop="6dp"
                         android:text="@string/switch_agp_add_detect_drying"
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="normal" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/greyLine" />
+
+                    <Switch
+                        android:id="@+id/sw_add_agp_notification"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="6dp"
+                        android:checked="true"
+                        android:text="@string/switch_agp_add_notification"
                         android:textColor="@android:color/darker_gray"
                         android:textStyle="normal" />
 
@@ -202,23 +359,22 @@
             </android.support.v7.widget.CardView>
 
             <Button
-                android:id="@+id/btn_open_in_app"
-                android:layout_width="120dp"
-                android:layout_height="48dp"
+                android:id="@+id/btn_add_agp_create"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/shape_button"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_button_positive"
                 android:text="@string/btn_agp_add"
-                android:textAllCaps="false"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
 
 
         </LinearLayout>
 
-
     </ScrollView>
 
-</LinearLayout>
+
+</RelativeLayout>
