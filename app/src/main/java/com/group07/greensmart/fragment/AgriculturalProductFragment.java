@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.group07.greensmart.R;
 import com.group07.greensmart.activity.agp.AddAgriculturalProductActivity;
 import com.group07.greensmart.activity.agp.UpdateAgriculturalProductActivity;
@@ -31,11 +30,7 @@ import com.group07.greensmart.listener.OnMenuItemAGPClickListener;
 import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.AgriculturalProduct;
 import com.group07.greensmart.model.ApiResponse;
-import com.group07.greensmart.rest.ApiInterface;
-import com.group07.greensmart.utils.ApiUtils;
-import com.group07.greensmart.utils.ApplicationUtils;
 import com.group07.greensmart.utils.ToastUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -56,7 +51,6 @@ import static com.group07.greensmart.constant.Constant.REQUEST_CODE_ADD_AGP;
 
 public class AgriculturalProductFragment extends BaseFragment {
 
-    private ApiInterface apiInterface;
     private FloatingActionButton fabAddAGP;
     private RecyclerView rvAGP;
     private ProgressBar progressBar;
@@ -68,7 +62,6 @@ public class AgriculturalProductFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiInterface = ApiUtils.getAPIInterface(getActivity());
     }
 
     @Override

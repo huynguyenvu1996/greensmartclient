@@ -20,6 +20,10 @@
             android:summary="@string/settings_summary_server"
             android:title="@string/settings_title_server" />
 
+        <Preference
+            android:key="location"
+            android:title="@string/settings_title_location" />
+
 
     </PreferenceCategory>
 

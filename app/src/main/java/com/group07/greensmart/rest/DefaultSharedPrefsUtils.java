@@ -2,7 +2,6 @@ package com.group07.greensmart.rest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -15,7 +14,13 @@ public class DefaultSharedPrefsUtils {
 
     public static final String KEY_NOTIFICATION = "notification";
     public static final String KEY_SERVER = "server";
-    public static final String VALUE_SERVER_DEFAULT = "http://";
+    public static final String VALUE_SERVER_DEFAULT = "http://host:port/";
+
+    public static final String KEY_LOCATION_LAT = "location_lat";
+    public static final String KEY_LOCATION_LNG = "location_lng";
+    //HCMUS coord
+    public static final String VALUE_LOCATION_LAT_DEFAULT = "10.7624218";
+    public static final String VALUE_LOCATION_LNG_DEFAULT = "106.6790126";
 
 
     private DefaultSharedPrefsUtils() {
@@ -42,6 +47,35 @@ public class DefaultSharedPrefsUtils {
 
     public static boolean setServer(Context context, String server) {
         return DefaultSharedPrefsUtils.setStringPreference(context, KEY_SERVER, server);
+
+    }
+
+    public static String getLocationLat(Context context) {
+        String server = DefaultSharedPrefsUtils.getStringPreference(context, KEY_LOCATION_LAT);
+        if (server != null && !server.isEmpty()) {
+            return server;
+        } else {
+            return VALUE_LOCATION_LAT_DEFAULT;
+        }
+    }
+
+    public static boolean setLocationLat(Context context, String lat) {
+        return DefaultSharedPrefsUtils.setStringPreference(context, KEY_LOCATION_LAT, lat);
+
+    }
+
+
+    public static String getLocationLng(Context context) {
+        String server = DefaultSharedPrefsUtils.getStringPreference(context, KEY_LOCATION_LNG);
+        if (server != null && !server.isEmpty()) {
+            return server;
+        } else {
+            return VALUE_LOCATION_LNG_DEFAULT;
+        }
+    }
+
+    public static boolean setLocationLng(Context context, String lng) {
+        return DefaultSharedPrefsUtils.setStringPreference(context, KEY_LOCATION_LNG, lng);
 
     }
 

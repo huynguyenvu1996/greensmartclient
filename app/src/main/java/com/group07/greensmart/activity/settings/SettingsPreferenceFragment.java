@@ -1,27 +1,22 @@
 package com.group07.greensmart.activity.settings;
 
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
-import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.group07.greensmart.R;
 import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
-
-import java.util.Calendar;
-
-import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 
 
 /**
@@ -31,15 +26,20 @@ import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingsPreferenceFragment extends PreferenceFragment {
 
-    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
+    private static final String TAG = SettingsPreferenceFragment.class.getSimpleName();
 
-    EditTextPreference serverEditTextPreference;
+    public static int REQUEST_PERMISSIONS_REQUEST_CODE = 5469;
+    protected Location mLastLocation;
+    private EditTextPreference serverEditTextPreference;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Preference locationPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_settings);
-//            setHasOptionsMenu(true);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        //            setHasOptionsMenu(true);
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences
         // to their values. When their values change, their summaries are
@@ -60,27 +60,40 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
             }
         });
 
+        locationPref = findPreference("location");
+        locationPref.setSummary(getActivity().getString(
+                R.string.settings_summary_location,
+                String.valueOf(DefaultSharedPrefsUtils.getLocationLat(getActivity())),
+                String.valueOf(DefaultSharedPrefsUtils.getLocationLng(getActivity()))));
+
+        locationPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(final Preference preference) {
+                getLastLocation();
+                return true;
+            }
+        });
+
 
     }
 
-    public void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(getActivity())) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getActivity().getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 5469) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            }
-        }
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLastLocation = task.getResult();
+                            Toast.makeText(getActivity(), "L: " + mLastLocation.getLatitude() + mLastLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                            locationPref.setSummary(getActivity().getString(R.string.settings_summary_location, String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())));
+                            DefaultSharedPrefsUtils.setLocationLat(getActivity(), String.valueOf(mLastLocation.getLatitude()));
+                            DefaultSharedPrefsUtils.setLocationLng(getActivity(), String.valueOf(mLastLocation.getLongitude()));
+                        } else {
+                            Log.w(TAG, "getLastLocation:exception", task.getException());
+                        }
+                    }
+                });
     }
 
 

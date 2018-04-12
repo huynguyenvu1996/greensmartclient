@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.group07.greensmart.rest.ApiInterface;
+import com.group07.greensmart.utils.ApiUtils;
 
 /**
  * Created by nguyenvuhuy on 4/5/18.
@@ -17,11 +19,13 @@ import com.google.gson.Gson;
 public class BaseFragment extends Fragment {
 
     protected Gson gson;
+    protected ApiInterface apiInterface;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gson = new Gson();
+        apiInterface = ApiUtils.getAPIInterface(getActivity());
     }
 
     @Nullable
