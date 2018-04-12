@@ -56,7 +56,7 @@
     <string name="settings_summary_notification">Bật thông báo</string>
     <string name="settings_title_developers">Nhà phát triển</string>
     <string name="settings_summary_developers">© 2018 G0714CLC. All rights reserved.</string>
-    <string name="settings_summary_location">Kinh độ: %1$s, vĩ độ: %2$s</string>
+    <string name="settings_summary_location">Kinh độ: %1$s \nVĩ độ: %2$s</string>
     <string name="title_activity_settings">Cài đặt</string>
     <string name="menu_item_agp_delete">Xóa bỏ</string>
     <string name="title_notification">Thông báo</string>
@@ -66,9 +66,12 @@
     <string name="btn_yes">Có</string>
     <string name="settings_title_server">Thông tin máy chủ</string>
     <string name="settings_summary_server">Cấu hình địa chỉ máy chủ</string>
-    <string name="txt_title_current_weather_real_time">Thời tiết thực tế</string>
+    <string name="txt_title_current_weather_real_time">Cảm biến</string>
     <string name="settings_title_location">Vị trí tọa độ</string>
-    <string name="txt_title_current_weather_internet">Thời tiết từ internet</string>
+    <string name="txt_title_current_weather_internet">Từ internet</string>
     <string name="message_notification_load_failed">Có lỗi trong quá trình tải thông báo!</string>
+    <string name="title_agp_forecast">Dự báo thời tiết</string>
+    <string name="network_no_conection">Không có kết nối mạng!</string>
+    <string name="network_title_setting">Cài đặt</string>
 
 </resources>

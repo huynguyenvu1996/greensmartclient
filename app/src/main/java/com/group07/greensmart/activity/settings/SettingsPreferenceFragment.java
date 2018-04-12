@@ -27,8 +27,6 @@ import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 public class SettingsPreferenceFragment extends PreferenceFragment {
 
     private static final String TAG = SettingsPreferenceFragment.class.getSimpleName();
-
-    public static int REQUEST_PERMISSIONS_REQUEST_CODE = 5469;
     protected Location mLastLocation;
     private EditTextPreference serverEditTextPreference;
     private FusedLocationProviderClient mFusedLocationClient;

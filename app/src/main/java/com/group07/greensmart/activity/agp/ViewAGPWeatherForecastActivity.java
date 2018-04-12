@@ -1,13 +1,11 @@
 package com.group07.greensmart.activity.agp;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Adapter;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.google.gson.JsonArray;
@@ -36,6 +34,10 @@ public class ViewAGPWeatherForecastActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_agp_weather_forecast);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.title_agp_forecast));
+
         rvOpenWeather = findViewById(R.id.rv_agp_weather_forecast);
         progressBar = findViewById(R.id.pb_agp_weather_forecast);
 
@@ -94,5 +96,16 @@ public class ViewAGPWeatherForecastActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
