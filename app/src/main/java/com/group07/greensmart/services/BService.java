@@ -13,7 +13,6 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,7 +29,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class BService extends Service {
-    private static final String TAG = "BServiec";
+    private final String TAG = this.getClass().getName();
     public BService that = this;
     Vibrator vibrator;
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -49,8 +48,6 @@ public class BService extends Service {
     private Emitter.Listener onPushNotification = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.d(TAG, "call: " + args[0].toString());
-            that.createNotification(args[0].toString(), "Troi dang mua!!!");
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             if (Objects.requireNonNull(vibrator).hasVibrator()) {
 
@@ -73,13 +70,15 @@ public class BService extends Service {
             JSONObject data = (JSONObject) args[0];
             String title = "Title";
             String subject = "Subject";
+            String id = "_id";
             try {
                 title = data.getString("title");
                 subject = data.getString("subject");
+                id = data.getString("_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            that.createNotification(title, subject);
+            that.createNotification(title, subject, id);
         }
     };
 
@@ -101,7 +100,7 @@ public class BService extends Service {
         return null;
     }
 
-    public void createNotification(String title, String text) {
+    public void createNotification(String title, String text, String id) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, "")
                         .setSmallIcon(R.drawable.ic_add_white)
@@ -110,18 +109,11 @@ public class BService extends Service {
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.putExtra("id", id);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingNotificationIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setContentIntent(pendingNotificationIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
