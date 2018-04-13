@@ -2,12 +2,13 @@ package com.group07.greensmart.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /**
  * Created by nguyenvuhuy on 3/28/18.
  */
 
-public class Notifications {
+public class Notifications implements Serializable {
 
     @SerializedName("_id")
     @Expose
