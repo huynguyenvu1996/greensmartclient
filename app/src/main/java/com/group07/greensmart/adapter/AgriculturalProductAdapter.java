@@ -1,8 +1,6 @@
 package com.group07.greensmart.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.group07.greensmart.R;
 import com.group07.greensmart.listener.OnMenuItemAGPClickListener;
@@ -162,7 +159,7 @@ public class AgriculturalProductAdapter extends RecyclerView.Adapter<Agricultura
         public AgriculturalProductViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
             txtName = (TextView) view.findViewById(R.id.txt_item_agp_name);
             txtTemperature = (TextView) view.findViewById(R.id.txt_item_agp_temperature);
             txtHumidity = (TextView) view.findViewById(R.id.txt_item_agp_humidity);

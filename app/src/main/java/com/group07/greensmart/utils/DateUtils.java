@@ -8,7 +8,7 @@ import android.text.format.DateFormat;
 
 public class DateUtils {
 
-    public static String DATE_FORMAT_SIMPLE = "h:mm a dd/MM/yyyy";
+    public static String DATE_FORMAT_SIMPLE = "HH:mm-dd/MM/yyyy";
 
     public static String convertDate(String dateInMilliseconds, String dateFormat) {
         return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();

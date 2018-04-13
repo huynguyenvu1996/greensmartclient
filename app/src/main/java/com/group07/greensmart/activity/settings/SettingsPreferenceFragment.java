@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.group07.greensmart.R;
 import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 
+import de.psdev.licensesdialog.LicensesDialog;
+
 
 /**
  * Created by huyjackson on 8/19/17.
@@ -27,12 +29,11 @@ import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 public class SettingsPreferenceFragment extends PreferenceFragment {
 
     private static final String TAG = SettingsPreferenceFragment.class.getSimpleName();
-
-    public static int REQUEST_PERMISSIONS_REQUEST_CODE = 5469;
     protected Location mLastLocation;
     private EditTextPreference serverEditTextPreference;
     private FusedLocationProviderClient mFusedLocationClient;
     private Preference locationPref;
+    private Preference openSourcePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,18 @@ public class SettingsPreferenceFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(final Preference preference) {
                 getLastLocation();
+                return true;
+            }
+        });
+
+        openSourcePref = findPreference("open_source_licenses");
+        openSourcePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                new LicensesDialog.Builder(getActivity())
+                        .setNotices(R.raw.open_source_licenses)
+                        .setTitle("Open Source Licenses")
+                        .build()
+                        .show();
                 return true;
             }
         });

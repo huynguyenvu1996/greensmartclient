@@ -24,12 +24,18 @@ import com.group07.greensmart.services.BService;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //creating fragment object
+    private Fragment fragment = null;
     private Toolbar toolbar = null;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, BService.class));
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,10 +45,25 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        startService(new Intent(this, BService.class));
+        fragment = new WeatherFragment();
+        toolbar.setTitle(getString(R.string.title_nav_weather));
+        navigationView.setCheckedItem(R.id.nav_menu_weather);
+
+        //replacing the fragment
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_fragment, fragment);
+            ft.commit();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -69,9 +90,17 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings: {
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
+                return true;
+            }
+            case R.id.action_about: {
+                DialogAboutApps dialogAboutApps = new DialogAboutApps(this);
+                dialogAboutApps.showDialog();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -88,8 +117,6 @@ public class MainActivity extends AppCompatActivity
 
     private void displaySelectedScreen(int itemId) {
 
-        //creating fragment object
-        Fragment fragment = null;
 
         //initializing the fragment object which is selected
         switch (itemId) {

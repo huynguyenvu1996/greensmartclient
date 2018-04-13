@@ -11,6 +11,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class BaseSocket {
+
     public static final String EVENT_PUSH_NOTIFICATION = "event_push_notification";
     public static final String EVENT_WEATHER_SENSOR = "event_weather_sensor";
     private static final String TAG = BaseSocket.class.getSimpleName();

@@ -5,16 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.group07.greensmart.R;
-import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.OpenWeather;
 import com.group07.greensmart.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
-import java.io.PipedInputStream;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,9 +41,9 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
 
         holder.txtDescription.setText(listOpenWeather.get(position).getDescription());
         holder.txtDate.setText(DateUtils.convertDate(listOpenWeather.get(position).getDt(), DateUtils.DATE_FORMAT_SIMPLE));
-        holder.txtTemperature.setText(context.getString(R.string.item_agp_temperature_forecast, String.valueOf(listOpenWeather.get(position).getTemperature())));
-        holder.txtHumidity.setText(context.getString(R.string.item_agp_humidity_forecast, String.valueOf(listOpenWeather.get(position).getHumidity())) + "%");
-//        holder.txtRain.setText(listOpenWeather.get(position).isRain() ? "Có mưa" : "Không mưa");
+        holder.txtTemperature.setText(context.getString(R.string.item_agp_temperature_forecast, String.valueOf((int) listOpenWeather.get(position).getTemperature())));
+        holder.txtHumidity.setText(context.getString(R.string.item_agp_humidity_forecast, String.valueOf((int) listOpenWeather.get(position).getHumidity())) + "%");
+        holder.txtRain.setText(listOpenWeather.get(position).isRain() ? "Có mưa" : "Không mưa");
         Picasso.get().load(listOpenWeather.get(position).getIcon()).into(holder.image);
     }
 
@@ -67,6 +64,7 @@ public class OpenWeatherAdapter extends RecyclerView.Adapter<OpenWeatherAdapter.
             txtHumidity = view.findViewById(R.id.txt_item_agp_humidity);
             txtDescription = view.findViewById(R.id.txt_item_agp_description);
             txtDate = view.findViewById(R.id.txt_item_agp_date);
+            txtRain = view.findViewById(R.id.txt_item_agp_rain);
             image = view.findViewById(R.id.img_item_agp_forecast_image);
         }
     }

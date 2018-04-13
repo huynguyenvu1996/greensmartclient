@@ -68,7 +68,7 @@ public interface ApiInterface {
      * TODO: Agricultural Notification API
      */
 
-    @GET("notifications/weather")
+    @GET("notifications/list")
     Call<ApiResponse> getNotificationList(@Query("sort") String sort);
 
     @GET("notifications/view/{id}")

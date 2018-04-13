@@ -17,8 +17,10 @@ import com.group07.greensmart.R;
 import com.group07.greensmart.model.ApiResponse;
 import com.group07.greensmart.model.OpenWeather;
 import com.group07.greensmart.model.Weather;
+import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 import com.group07.greensmart.socket.BaseSocket;
 import com.group07.greensmart.utils.DateUtils;
+import com.group07.greensmart.utils.NetworkUtils;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -38,7 +40,7 @@ import retrofit2.Response;
 
 
 public class WeatherFragment extends BaseFragment {
-    public static final String TAG = WeatherFragment.class.getSimpleName();
+    private static final String TAG = WeatherFragment.class.getSimpleName();
     private Weather weather;
     private LineGraphSeries<DataPoint> mSeriesTemperature;
     private double graphLastXValue = 5d;
@@ -60,8 +62,8 @@ public class WeatherFragment extends BaseFragment {
                         graphLastXValue += 0.25d;
                         mSeriesTemperature.appendData(new DataPoint(graphLastXValue, weather.getTemperature()), true, 22);
                         mSeriesHumidity.appendData(new DataPoint(graphLastXValue, weather.getHumidity()), true, 22);
-                        txtRealTimeHumidity.setText(String.valueOf(weather.getHumidity()));
-                        txtRealTimeTemp.setText(String.valueOf(weather.getTemperature()));
+                        txtRealTimeHumidity.setText(String.valueOf((int) weather.getHumidity()) + "°C");
+                        txtRealTimeTemp.setText(String.valueOf((int) weather.getTemperature()) + "%");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -73,8 +75,6 @@ public class WeatherFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        weather = new Weather();
-        BaseSocket.mSocket.on(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
     }
 
 
@@ -116,39 +116,54 @@ public class WeatherFragment extends BaseFragment {
         graphTemperature.addSeries(mSeriesTemperature);
         graphHumidity.addSeries(mSeriesHumidity);
 
+        if (!(NetworkUtils.haveNetworkConnection(getActivity()))) {
+            NetworkUtils.showSnackbarAlertNetwork(getActivity().findViewById(android.R.id.content), getActivity());
+        } else {
+
+            weather = new Weather();
+
+            if (BaseSocket.mSocket != null) {
+                BaseSocket.mSocket.on(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
+            }
+
+            loadCurrentWeatherInternetFromServer();
+        }
+
         return relativeLayout;
     }
 
     private void loadCurrentWeatherInternetFromServer() {
 
-        apiInterface.getAGPList().enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
-                if (response.isSuccessful()) {
-                    if (!response.body().isError()) {
-                        JsonObject agpObject = gson.toJsonTree(response.body().getData()).getAsJsonObject();
-                        openWeather = gson.fromJson(agpObject, OpenWeather.class);
-                        txtInternetCity.setText(openWeather.getCityName());
-                        txtInternetDate.setText(DateUtils.convertDate(openWeather.getDt(), DateUtils.DATE_FORMAT_SIMPLE));
-                        txtInternetDescription.setText(openWeather.getDescription());
-                        txtInternetTemp.setText(String.valueOf(openWeather.getTemperature()));
-                        txtInternetHumidity.setText(String.valueOf(openWeather.getHumidity()));
-                        Picasso.get().load(openWeather.getIcon()).into(imgInternetIcon);
-                    } else {
+        apiInterface.getCurrentInternetWeather(DefaultSharedPrefsUtils.getLocationLat(getActivity()),
+                DefaultSharedPrefsUtils.getLocationLng(getActivity()))
+                .enqueue(new Callback<ApiResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                        if (response.isSuccessful()) {
+                            if (!response.body().isError()) {
+                                JsonObject agpObject = gson.toJsonTree(response.body().getData()).getAsJsonObject();
+                                openWeather = gson.fromJson(agpObject, OpenWeather.class);
+                                txtInternetCity.setText(openWeather.getCityName());
+                                txtInternetDate.setText(DateUtils.convertDate(openWeather.getDt(), DateUtils.DATE_FORMAT_SIMPLE));
+                                txtInternetDescription.setText(openWeather.getDescription());
+                                txtInternetTemp.setText(String.valueOf((int) openWeather.getTemperature()));
+                                txtInternetHumidity.setText(getString(R.string.item_agp_humidity_forecast, String.valueOf((int) openWeather.getHumidity())) + "%");
+                                Picasso.get().load(openWeather.getIcon()).into(imgInternetIcon);
+                            } else {
 
+                            }
+                            Log.d("MainActivity", "posts loaded from API");
+                        } else {
+                            int statusCode = response.code();
+                            // handle request errors depending on status code
+                        }
                     }
-                    Log.d("MainActivity", "posts loaded from API");
-                } else {
-                    int statusCode = response.code();
-                    // handle request errors depending on status code
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
-                Log.d("MainActivity", "error loading from API" + t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
+                        Log.d("MainActivity", "error loading from API" + t.getMessage());
+                    }
+                });
     }
 
     @Override

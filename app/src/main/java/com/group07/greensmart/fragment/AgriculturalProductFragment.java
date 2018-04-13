@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.group07.greensmart.R;
@@ -30,6 +29,7 @@ import com.group07.greensmart.listener.OnMenuItemAGPClickListener;
 import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.AgriculturalProduct;
 import com.group07.greensmart.model.ApiResponse;
+import com.group07.greensmart.utils.NetworkUtils;
 import com.group07.greensmart.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class AgriculturalProductFragment extends BaseFragment {
 
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_agricultural_product, null);
 
-        fabAddAGP = (FloatingActionButton) relativeLayout.findViewById(R.id.fab_add_agricultural_product);
+        fabAddAGP = relativeLayout.findViewById(R.id.fab_add_agricultural_product);
         fabAddAGP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +115,14 @@ public class AgriculturalProductFragment extends BaseFragment {
         });
 
         showHideWhenScroll();
-        loadAGPListFromServer();
+
+        if (!(NetworkUtils.haveNetworkConnection(getActivity()))) {
+            NetworkUtils.showSnackbarAlertNetwork(getActivity().findViewById(android.R.id.content), getActivity());
+            progressBar.setVisibility(View.GONE);
+        } else {
+            loadAGPListFromServer();
+        }
+
 
         agriculturalProductAdapter.setRecycleViewOnItemClickListener(new RecycleViewOnItemClickListener() {
             @Override
@@ -135,8 +142,6 @@ public class AgriculturalProductFragment extends BaseFragment {
         agriculturalProductAdapter.setOnMenuItemAGPClickListener(new OnMenuItemAGPClickListener() {
             @Override
             public void onViewWeatherForecastClick(View view, int position) {
-
-                Toast.makeText(getActivity(), "G", Toast.LENGTH_SHORT).show();
                 Intent agpWeatherForecastIntent = new Intent(getActivity(), ViewAGPWeatherForecastActivity.class);
                 agpWeatherForecastIntent.putExtra("AGP", listAGP.get(position));
                 startActivity(agpWeatherForecastIntent);

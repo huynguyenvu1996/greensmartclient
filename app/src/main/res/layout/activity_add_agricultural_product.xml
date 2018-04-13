@@ -43,7 +43,7 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:layout_centerHorizontal="true"
-                            android:src="@drawable/ca_phe_hat" />
+                            android:src="@drawable/ic_default_no_image" />
 
                         <Button
                             android:id="@+id/btn_add_agp_image"
