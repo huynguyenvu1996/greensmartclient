@@ -1,23 +1,25 @@
 package com.group07.greensmart.services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.group07.greensmart.R;
-import com.group07.greensmart.activity.MainActivity;
+import com.group07.greensmart.activity.notification.ViewNotificationActivity;
+import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 import com.group07.greensmart.socket.BaseSocket;
 
 import org.json.JSONException;
@@ -48,6 +50,7 @@ public class BService extends Service {
     private Emitter.Listener onPushNotification = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            Log.d(TAG, "call: push");
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             if (Objects.requireNonNull(vibrator).hasVibrator()) {
 
@@ -64,21 +67,22 @@ public class BService extends Service {
                 }
 
 
-            } else {
-                Toast.makeText(BService.this, "Device does not support vibration", Toast.LENGTH_SHORT).show();
             }
             JSONObject data = (JSONObject) args[0];
             String title = "Title";
             String subject = "Subject";
-            String id = "_id";
+            String id = "id";
             try {
                 title = data.getString("title");
                 subject = data.getString("subject");
-                id = data.getString("_id");
+                id = data.getString("id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            that.createNotification(title, subject, id);
+            if (DefaultSharedPrefsUtils.isEnabledNotification(getApplicationContext())) {
+                Log.d(TAG, "call: createNoti");
+                that.createNotification(title, subject, id);
+            }
         }
     };
 
@@ -101,24 +105,42 @@ public class BService extends Service {
     }
 
     public void createNotification(String title, String text, String id) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, "")
-                        .setSmallIcon(R.drawable.ic_add_white)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        final int NOTIFICATION_ID = 1;
+        final String NOTIFICATION_CHANNEL_ID = "my_notification_channel";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setAutoCancel(true);
+
 // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, ViewNotificationActivity.class);
         resultIntent.putExtra("id", id);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingNotificationIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        mBuilder.setContentIntent(pendingNotificationIntent);
+        builder.setContentIntent(pendingNotificationIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
         if (mNotificationManager != null) {
-            mNotificationManager.notify(1, mBuilder.build());
+            Log.d(TAG, "createNotification: ");
+            mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         }
 
     }

@@ -1,5 +1,6 @@
 package com.group07.greensmart.activity.notification;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,12 +22,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@SuppressLint("Registered")
 public class ViewNotificationActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String TAG = ViewAGPWeatherForecastActivity.class.getSimpleName();
     private TextView txtTitle, txtDate;
     private EditText edtContent;
     private ProgressBar progressBar;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button btnDone;
     private Notifications notifications;
 
@@ -40,12 +43,15 @@ public class ViewNotificationActivity extends BaseActivity implements View.OnCli
         edtContent = findViewById(R.id.edt_notification_content);
         progressBar = findViewById(R.id.pb_notification);
         btnDone = findViewById(R.id.btn_notification_done);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("id")) {
+                String id = extras.getString("id");
+                Log.d(TAG, "onNewIntent: " + id);
+                loadNotificationFromServer(id);
+            }
+        }
         btnDone.setOnClickListener(this);
-
-        loadNotificationFromServer("121212121");
-
-
     }
 
     private void isLoadingNotification(boolean isLoading) {

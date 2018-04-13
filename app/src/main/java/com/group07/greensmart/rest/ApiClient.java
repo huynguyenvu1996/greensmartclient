@@ -6,7 +6,6 @@ import com.group07.greensmart.utils.ApplicationUtils;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by nguyenvuhuy on 4/2/18.
@@ -22,7 +21,7 @@ public class ApiClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(ApplicationUtils.getServerUrl(context) + "api/")
                     /*https://stackoverflow.com/questions/44293018/retrofit-2-0-multipart-request-send-boolean-type-in-form-data-including-file*/
-                    .addConverterFactory(ScalarsConverterFactory.create())
+                    //.addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
