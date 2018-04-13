@@ -73,5 +73,8 @@
     <string name="title_agp_forecast">Dự báo thời tiết</string>
     <string name="network_no_conection">Không có kết nối mạng!</string>
     <string name="network_title_setting">Cài đặt</string>
+    <string name="title_asc">Tăng dần</string>
+    <string name="title_desc">Giảm dần</string>
+    <string name="title_filter">Lọc danh sách</string>
 
 </resources>

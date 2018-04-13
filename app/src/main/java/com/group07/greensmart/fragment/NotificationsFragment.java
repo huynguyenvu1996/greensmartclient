@@ -19,6 +19,8 @@ import com.group07.greensmart.adapter.NotificationsAdapter;
 import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
 import com.group07.greensmart.model.ApiResponse;
 import com.group07.greensmart.model.Notifications;
+import com.group07.greensmart.utils.DialogFilter;
+import com.group07.greensmart.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,7 @@ public class NotificationsFragment extends BaseFragment {
     private NotificationsAdapter notificationsAdapter;
     private ProgressBar progressBar;
     private FloatingActionButton fabFilter;
+    private String mFilter = "desc";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +52,24 @@ public class NotificationsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_notifications, null);
+
+        fabFilter = relativeLayout.findViewById(R.id.fab_filter_notifications);
+        fabFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DialogFilter dialogFilter = new DialogFilter(getActivity());
+                dialogFilter.show();
+                dialogFilter.setOnDownloadLocationSelectedListener(new DialogFilter.OnFilterListener() {
+                    @Override
+                    public void onFilterListener(String filter) {
+                        mFilter = filter;
+                        loadNotificationListFromServer();
+                    }
+                });
+
+            }
+        });
 
         listNotifications = new ArrayList<>();
 
@@ -62,7 +83,14 @@ public class NotificationsFragment extends BaseFragment {
         rvNotifications.setLayoutManager(new LinearLayoutManager(getContext()));
 
         showHideWhenScroll();
-        loadAGPListFromServer();
+
+
+        if (!(NetworkUtils.haveNetworkConnection(getActivity()))) {
+            NetworkUtils.showSnackbarAlertNetwork(getActivity().findViewById(android.R.id.content), getActivity());
+            progressBar.setVisibility(View.GONE);
+        } else {
+            loadNotificationListFromServer();
+        }
 
 
         notificationsAdapter.setRecycleViewOnItemClickListener(new RecycleViewOnItemClickListener() {
@@ -101,9 +129,9 @@ public class NotificationsFragment extends BaseFragment {
         });
     }
 
-    private void loadAGPListFromServer() {
+    private void loadNotificationListFromServer() {
         isLoadingNotification(true);
-        apiInterface.getNotificationList("desc").enqueue(new Callback<ApiResponse>() {
+        apiInterface.getNotificationList(mFilter).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 isLoadingNotification(false);

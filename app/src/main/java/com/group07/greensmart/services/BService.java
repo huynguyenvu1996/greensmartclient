@@ -62,8 +62,9 @@ public class BService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        BaseSocket.setConnect(BService.this);
+        if (BaseSocket.mSocket == null) {
+            BaseSocket.setConnect(BService.this);
+        }
         BaseSocket.mSocket
                 .on(Socket.EVENT_CONNECT, onConnect)
                 .on(BaseSocket.EVENT_PUSH_NOTIFICATION, onPushNotification)

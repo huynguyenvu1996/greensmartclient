@@ -59,7 +59,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentBottom="true"
-                                android:text="34"
+                                android:text="0"
                                 android:textSize="64sp" />
 
                             <TextView
@@ -86,7 +86,7 @@
                         android:id="@+id/txt_weather_internet_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Thanh pho Ho Chi Minh"
+                        android:text="Tỉnh thành"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
@@ -95,7 +95,7 @@
                         android:id="@+id/txt_weather_internet_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Bầu trời quang đãng"
+                        android:text="Thông tin thời tiết"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp" />
@@ -112,7 +112,7 @@
                             android:id="@+id/txt_weather_internet_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12/03/2018"
+                            android:text="01/01/1970"
                             android:textAlignment="center"
                             android:textSize="14sp" />
 

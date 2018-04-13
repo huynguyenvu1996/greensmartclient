@@ -20,6 +20,7 @@ import com.group07.greensmart.model.Weather;
 import com.group07.greensmart.rest.DefaultSharedPrefsUtils;
 import com.group07.greensmart.socket.BaseSocket;
 import com.group07.greensmart.utils.DateUtils;
+import com.group07.greensmart.utils.NetworkUtils;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -74,10 +75,6 @@ public class WeatherFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        weather = new Weather();
-        BaseSocket.mSocket.on(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
-
-        loadCurrentWeatherInternetFromServer();
     }
 
 
@@ -118,6 +115,19 @@ public class WeatherFragment extends BaseFragment {
 
         graphTemperature.addSeries(mSeriesTemperature);
         graphHumidity.addSeries(mSeriesHumidity);
+
+        if (!(NetworkUtils.haveNetworkConnection(getActivity()))) {
+            NetworkUtils.showSnackbarAlertNetwork(getActivity().findViewById(android.R.id.content), getActivity());
+        } else {
+
+            weather = new Weather();
+
+            if (BaseSocket.mSocket != null) {
+                BaseSocket.mSocket.on(BaseSocket.EVENT_WEATHER_SENSOR, onWeatherSensor);
+            }
+
+            loadCurrentWeatherInternetFromServer();
+        }
 
         return relativeLayout;
     }
