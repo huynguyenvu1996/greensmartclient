@@ -4,13 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_agricultural_product"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sr_agricultural_product"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#eaecee"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"/>
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_agricultural_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eaecee"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_agricultural_product"
@@ -20,5 +27,12 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_add_white" />
+
+    <ProgressBar
+        android:id="@+id/pb_agricultural_product"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

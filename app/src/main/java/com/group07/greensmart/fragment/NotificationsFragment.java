@@ -1,32 +1,46 @@
 package com.group07.greensmart.fragment;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.google.gson.JsonArray;
 import com.group07.greensmart.R;
 import com.group07.greensmart.adapter.NotificationsAdapter;
+import com.group07.greensmart.listener.RecycleViewOnItemClickListener;
+import com.group07.greensmart.model.ApiResponse;
 import com.group07.greensmart.model.Notifications;
+import com.group07.greensmart.utils.DialogFilter;
+import com.group07.greensmart.utils.NetworkUtils;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by nguyenvuhuy on 3/28/18.
  */
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends BaseFragment {
 
-    private RecyclerView rvNotifications = null;
-    private ArrayList<Notifications> listNotifications = null;
-    private NotificationsAdapter notificationsAdapter = null;
+    private static final String TAG = NotificationsFragment.class.getSimpleName();
+    private RecyclerView rvNotifications;
+    private ArrayList<Notifications> listNotifications;
+    private NotificationsAdapter notificationsAdapter;
+    private ProgressBar progressBar;
+    private FloatingActionButton fabFilter;
+    private String mFilter = "desc";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,18 +53,113 @@ public class NotificationsFragment extends Fragment {
 
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_notifications, null);
 
+        fabFilter = relativeLayout.findViewById(R.id.fab_filter_notifications);
+        fabFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DialogFilter dialogFilter = new DialogFilter(getActivity());
+                dialogFilter.show();
+                dialogFilter.setOnDownloadLocationSelectedListener(new DialogFilter.OnFilterListener() {
+                    @Override
+                    public void onFilterListener(String filter) {
+                        mFilter = filter;
+                        loadNotificationListFromServer();
+                    }
+                });
+
+            }
+        });
+
         listNotifications = new ArrayList<>();
-        listNotifications.add(new Notifications("00000", "hello", "subject", "content", false, "1522897200000", "adsdsadsadsa"));
-        listNotifications.add(new Notifications("00000", "hello", "subject", "content", true, "1522897200000", "adsdsadsadsa"));
 
         notificationsAdapter = new NotificationsAdapter(getContext(), listNotifications);
 
         rvNotifications = relativeLayout.findViewById(R.id.rv_notifications);
+        progressBar = relativeLayout.findViewById(R.id.pb_notification);
+        fabFilter = relativeLayout.findViewById(R.id.fab_filter_notifications);
 
         rvNotifications.setAdapter(notificationsAdapter);
         rvNotifications.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        showHideWhenScroll();
+
+
+        if (!(NetworkUtils.haveNetworkConnection(getActivity()))) {
+            NetworkUtils.showSnackbarAlertNetwork(getActivity().findViewById(android.R.id.content), getActivity());
+            progressBar.setVisibility(View.GONE);
+        } else {
+            loadNotificationListFromServer();
+        }
+
+
+        notificationsAdapter.setRecycleViewOnItemClickListener(new RecycleViewOnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        });
 
         return relativeLayout;
+    }
+
+    private void isLoadingNotification(boolean isLoading) {
+        if (isLoading) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+
+    private void showHideWhenScroll() {
+        rvNotifications.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //dy > 0: scroll up; dy < 0: scroll down
+                if (dy > 0) fabFilter.hide();
+                else fabFilter.show();
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    private void loadNotificationListFromServer() {
+        isLoadingNotification(true);
+        apiInterface.getNotificationList(mFilter).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                isLoadingNotification(false);
+                if (response.isSuccessful()) {
+                    if (!response.body().isError()) {
+                        if (listNotifications != null && !listNotifications.isEmpty()) {
+                            listNotifications.clear();
+                        }
+                        JsonArray listNotificationArray = gson.toJsonTree(response.body().getData()).getAsJsonArray();
+                        for (int i = 0; i < listNotificationArray.size(); i++) {
+                            Notifications notification = gson.fromJson(listNotificationArray.get(i), Notifications.class);
+                            listNotifications.add(notification);
+                        }
+                        notificationsAdapter.notifyDataSetChanged();
+                    } else {
+
+                    }
+                    Log.d(TAG, "Posts loaded from API");
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
+                isLoadingNotification(false);
+                Log.d(TAG, "Error loading from API" + t.getMessage());
+            }
+        });
     }
 }

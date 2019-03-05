@@ -1,9 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.group07.greensmart.activity.ViewNotificationActivity">
+    tools:context="com.group07.greensmart.activity.notification.ViewNotificationActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/txt_notification_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="6dp"
+        android:text="Thông báo"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_notification_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_notification_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="12:08 - 14/04/2018"
+        android:textColor="@color/grey"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edt_notification_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_notification_date"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/shape_edit_text"
+        android:focusable="false"
+        android:lines="10"
+        android:padding="10dp"
+        android:text="Không có nội dung..." />
+
+    <Button
+        android:id="@+id/btn_notification_done"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/edt_notification_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_button_positive"
+        android:text="OK"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <ProgressBar
+        android:id="@+id/pb_notification"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>
